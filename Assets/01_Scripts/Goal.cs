@@ -2,19 +2,20 @@ using UnityEngine;
 
 public class Goal : MonoBehaviour
 {
-    public bool isLeftGoal; // marcar en el inspector
+    public bool isLeftGoal; // Si es el arco izquierdo
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Ball"))
-        {
-            Ball ball = other.GetComponent<Ball>();
-            if (ball != null)
-            {
-                ball.ResetBall();
-            }
+        if (!other.CompareTag("Ball")) return;
 
-            Debug.Log(isLeftGoal ? "Gol del jugador derecho" : "Gol del jugador izquierdo");
+        Ball ball = other.GetComponent<Ball>();
+        if (ball != null) ball.ResetBall();
+
+        // Si la pelota entra al arco izquierdo, anota el jugador derecho, y viceversa
+        if (ScoreManager.Instance != null)
+        {
+            if (isLeftGoal) ScoreManager.Instance.AddPointRightPlayer();
+            else ScoreManager.Instance.AddPointLeftPlayer();
         }
     }
 }
